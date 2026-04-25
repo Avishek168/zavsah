@@ -1,0 +1,5 @@
+CLASS zbp_cds_i_add_save DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zcds_i_travel_avsah.
+ENDCLASS.
+
+CLASS zbp_cds_i_add_save IMPLEMENTATION.
+ENDCLASS.

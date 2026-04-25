@@ -1,0 +1,33 @@
+projection;
+strict ( 2 );
+
+define behavior for ZCDS_C_TRAVEL_AVSAH //alias <alias_name>
+use etag
+{
+  use create;
+  use update;
+  use delete;
+  use action copyTravel;
+
+  use association _booking { create; }
+}
+
+define behavior for ZCDS_C_BOOKING_AVSAH //alias <alias_name>
+use etag
+{
+  use update;
+  use delete;
+
+  use association _travel;
+  use association _booksup { create; }
+}
+
+define behavior for ZCDS_C_BOOKINGSUPP_AVSAH //alias <alias_name>
+use etag
+{
+  use update;
+  use delete;
+
+  use association _travel;
+  use association _booking;
+}

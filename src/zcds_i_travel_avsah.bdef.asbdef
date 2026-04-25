@@ -1,0 +1,111 @@
+managed
+implementation in class zbp_cds_i_add_save unique;
+//implementation in class zbp_cds_i_travel_avsah unique;
+strict ( 2 );
+
+define behavior for ZCDS_I_TRAVEL_AVSAH alias Travel
+implementation in class zcl_bp_travel_avsah unique
+persistent table ztravel_avsah
+with additional save
+lock master
+authorization master ( instance )
+etag master LastChangedAt
+early numbering
+{
+  action ( features : instance ) acceptTravel result [1] $self; //dynamic feature control to enable or disable actions
+  action ( features : instance )  rejectTravel result [1] $self; //dynamic feature control to enable or disable actions
+  factory action copyTravel [1];
+  internal action reCalTotalPrice;
+
+ validation validateCustomer on save { create; field CustomerId ; }
+ validation validateDates on save { create; field BeginDate, EndDate ; }
+
+ determination calculateTotalPrice on modify{ create; field BookingFee, CurrencyCode; }
+
+  create ( authorization : global );
+  update;
+  delete;
+  field ( readonly ) TravelId, CreatedBy, CreatedAt, LastChangedBy; //feature control to make fields readonly
+  field( mandatory ) AgencyId,BeginDate, EndDate,  OverallStatus, BookingFee, CurrencyCode; //feature control to make this fields mandatory
+  field( mandatory : create, readonly : update ) CustomerId;
+  association _booking { create ( features : instance ); }
+  mapping for ztravel_avsah
+    {
+      TravelId      = travel_id;
+      AgencyId      = agency_id;
+      CustomerId    = customer_id;
+      BeginDate     = begin_date;
+      EndDate       = end_date;
+      BookingFee    = booking_fee;
+      TotalPrice    = total_price;
+      CurrencyCode  = currency_code;
+      Description   = description;
+      OverallStatus = overall_status;
+      CreatedBy     = created_by;
+      CreatedAt     = created_at;
+      LastChangedBy = last_changed_by;
+      LastChangedAt = last_changed_at;
+    }
+}
+
+define behavior for ZCDS_I_BOOKING_AVSAH alias Booking
+implementation in class zcl_bp_booking_avsah unique
+persistent table zbooking_avsah
+lock dependent by _travel
+authorization dependent by _travel
+etag master LastChangedAt
+early numbering
+{
+  update;
+  delete;
+  field ( readonly ) TravelId, BookingId, LastChangedAt;
+  field ( mandatory ) CarrierId, FlightDate, ConnectionId, BookingStatus;
+  field( mandatory : create, readonly : update ) BookingDate, CustomerId;
+
+   determination calculateTotalPrice on modify{ create; field FlightPrice, CurrencyCode; }
+
+  association _travel;
+  association _booksup { create( features : instance); }
+  mapping for zbooking_avsah
+    {
+      TravelId      = travel_id;
+      BookingId     = booking_id;
+      BookingDate   = booking_date;
+      CustomerId    = customer_id;
+      CarrierId     = carrier_id;
+      ConnectionId  = connection_id;
+      FlightDate    = flight_date;
+      FlightPrice   = flight_price;
+      CurrencyCode  = currency_code;
+      BookingStatus = booking_status;
+      LastChangedAt = last_changed_at;
+    }
+}
+
+define behavior for ZCDS_I_BOOKINGSUPP_AVSAH alias Booksupp
+implementation in class zcl_bp_booksupp_avsah unique
+persistent table zbooksupp_avsah
+lock dependent by _travel
+authorization dependent by _travel
+etag master LastChangedAt
+early numbering
+{
+  update;
+  delete;
+  field ( readonly ) TravelId, BookingId, BookingSupplementId, LastChangedAt;
+  field( mandatory ) SupplementId, Price;
+
+   determination calculateTotalPrice on modify{ create; field Price, CurrencyCode; }
+  association _travel;
+  association _booking;
+  mapping for zbooksupp_avsah
+    {
+      TravelId            = travel_id;
+      BookingId           = booking_id;
+      BookingSupplementId = booking_supplement_id;
+      SupplementId        = supplement_id;
+      price               = price;
+      CurrencyCode        = currency_code;
+      LastChangedAt       = last_changed_at;
+    }
+}

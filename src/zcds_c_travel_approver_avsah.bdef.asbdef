@@ -1,0 +1,24 @@
+projection;
+strict ( 2 );
+
+define behavior for zcds_c_travel_approver_avsah alias Travel
+use etag
+{
+//  use create;
+  use update;
+//  use delete;
+
+  use action acceptTravel;
+  use action rejectTravel;
+//  use action copyTravel;
+
+  use association _booking { create; }
+}
+
+define behavior for zcds_c_Booking_approver_avsah alias Booking
+{
+  use update;
+  use delete;
+
+  use association _travel;
+}

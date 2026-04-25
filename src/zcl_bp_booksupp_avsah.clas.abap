@@ -1,0 +1,5 @@
+CLASS zcl_bp_booksupp_avsah DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zcds_i_travel_avsah.
+ENDCLASS.
+
+CLASS zcl_bp_booksupp_avsah IMPLEMENTATION.
+ENDCLASS.

@@ -1,0 +1,57 @@
+@Metadata.layer: #CORE
+@Search.searchable: true
+@UI.headerInfo: {
+    typeName: 'Booking Supplement',
+    typeNamePlural: 'Booking Supplements',
+    title: {
+        type: #STANDARD,
+        label: 'Booking Supplements',
+        criticalityRepresentation: #WITHOUT_ICON,
+        value: 'BookingSupplementId'
+    }
+    }
+annotate view ZCDS_C_BOOKINGSUPP_AVSAH with
+{
+  //    TravelId;
+  //    BookingId;
+  @UI.facet: [{ position: 10,
+              type: #IDENTIFICATION_REFERENCE,
+              label: 'Booking Supplement',
+              id: 'booksup',
+              purpose: #STANDARD
+             }]
+  @UI:{
+       lineItem: [{ position: 10 }],
+       identification: [{ position: 10 }]
+      }
+  @Search.defaultSearchElement: true
+  BookingSupplementId;
+  @UI:{
+     lineItem: [{ position: 20 }],
+     identification: [{ position: 15 }]
+    }
+  @Consumption.valueHelpDefinition: [{ entity: {
+                                           name: '/DMO/I_Supplement',
+                                           element: 'SupplementID'
+                                                },
+                                       additionalBinding: [
+                                                      { element: 'Price' ,
+                                                        localElement: 'Price' },
+                                                      { element: 'CurrencyCode' ,
+                                                        localElement: 'CurrencyCode' }
+                                       ]
+                                        }]
+  SupplementId;
+  @UI:{
+     lineItem: [{ position: 30 }],
+     identification: [{ position: 20 }]
+    }
+  Price;
+  @Consumption.valueHelpDefinition: [{ entity: {
+                                         name: 'i_currency',
+                                         element: 'Currency'
+                                     } }]
+  CurrencyCode;
+
+
+}
